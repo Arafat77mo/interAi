@@ -90,13 +90,43 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
               </div>
             </div>
             <div className="p-6 bg-gray-50/50">
-              <div className="mb-4">
+              <div className="mb-6">
                 <span className="text-xs font-bold text-gray-500 uppercase block mb-1">{t.yourAnswer}</span>
-                <p className="text-gray-700 italic">"{response.userAnswer}"</p>
+                <p className="text-gray-700 italic">"{response.userAnswer || 'No answer provided.'}"</p>
               </div>
-              <div className="bg-white p-4 rounded-xl border border-gray-100">
-                <span className="text-xs font-bold text-indigo-600 uppercase block mb-1">{t.aiCritique}</span>
-                <p className="text-gray-600 text-sm leading-relaxed">{response.feedback}</p>
+              
+              <div className="bg-white p-6 rounded-2xl border border-gray-100 mb-4">
+                <span className="text-xs font-bold text-indigo-600 uppercase block mb-2">{t.aiCritique}</span>
+                <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"{response.feedback}"</p>
+                
+                <div className="grid sm:grid-cols-2 gap-6">
+                  {response.positives && response.positives.length > 0 && (
+                    <div className="bg-emerald-50/30 p-4 rounded-xl border border-emerald-50">
+                      <h4 className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-2">Strengths</h4>
+                      <ul className="space-y-1.5">
+                        {response.positives.map((p, i) => (
+                          <li key={i} className="flex gap-2 text-xs text-emerald-800 font-medium leading-relaxed">
+                            <span className="shrink-0 text-[10px]">✅</span>
+                            <span>{p}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {response.improvements && response.improvements.length > 0 && (
+                    <div className="bg-rose-50/30 p-4 rounded-xl border border-rose-50">
+                      <h4 className="text-[9px] font-black text-rose-600 uppercase tracking-widest mb-2">Areas for Improvement</h4>
+                      <ul className="space-y-1.5">
+                        {response.improvements.map((im, i) => (
+                          <li key={i} className="flex gap-2 text-xs text-rose-800 font-medium leading-relaxed">
+                            <span className="shrink-0 text-[10px]">💡</span>
+                            <span>{im}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

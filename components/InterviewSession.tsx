@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Difficulty, Language, Question, InterviewResponse, UiLanguage } from '../types';
-import { geminiService } from '../services/geminiService';
+import { geminiService, DetailedEvaluation } from '../services/geminiService';
 import { translations } from '../translations';
 import { GoogleGenAI, Modality, LiveServerMessage } from "@google/genai";
 
@@ -55,7 +55,7 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
   const [loading, setLoading] = useState(!initialState);
   const [evaluating, setEvaluating] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [currentEvaluation, setCurrentEvaluation] = useState<{ feedback: string, score: number } | null>(null);
+  const [currentEvaluation, setCurrentEvaluation] = useState<DetailedEvaluation | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
@@ -265,6 +265,8 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
       questionText: questions[currentIndex].text,
       userAnswer: userAnswer,
       feedback: currentEvaluation.feedback,
+      positives: currentEvaluation.positives,
+      improvements: currentEvaluation.improvements,
       score: currentEvaluation.score
     };
 
@@ -451,7 +453,7 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
 
         {showFeedback && currentEvaluation && (
           <div className="mt-12 p-10 bg-white rounded-[2.5rem] border-2 border-indigo-50 shadow-2xl shadow-indigo-500/5 animate-in slide-in-from-top-4 duration-500 text-start">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
+            <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
               <div className={`w-24 h-24 rounded-3xl flex flex-col items-center justify-center shrink-0 shadow-lg ${
                 currentEvaluation.score >= 80 ? 'bg-emerald-50 text-emerald-600' : currentEvaluation.score >= 50 ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'
               }`}>
@@ -470,9 +472,38 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
                     }
                   </h3>
                 </div>
-                <p className="text-gray-600 leading-relaxed font-medium whitespace-pre-wrap italic">
+                <p className="text-gray-600 leading-relaxed font-medium whitespace-pre-wrap italic mb-4">
                   "{currentEvaluation.feedback}"
                 </p>
+                
+                <div className="grid md:grid-cols-2 gap-6 mt-6">
+                  {currentEvaluation.positives.length > 0 && (
+                    <div className="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100">
+                      <h4 className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">What went well</h4>
+                      <ul className="space-y-2">
+                        {currentEvaluation.positives.map((p, i) => (
+                          <li key={i} className="flex gap-2 text-sm font-medium text-emerald-800">
+                            <span className="shrink-0">✅</span>
+                            <span>{p}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {currentEvaluation.improvements.length > 0 && (
+                    <div className="bg-rose-50/50 p-6 rounded-2xl border border-rose-100">
+                      <h4 className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-3">Room for growth</h4>
+                      <ul className="space-y-2">
+                        {currentEvaluation.improvements.map((im, i) => (
+                          <li key={i} className="flex gap-2 text-sm font-medium text-rose-800">
+                            <span className="shrink-0">💡</span>
+                            <span>{im}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             

@@ -17,12 +17,10 @@ interface SavedSession {
 interface LanguageSelectorProps {
   onSelect: (lang: Language, diff: Difficulty, jd?: string) => void;
   onResume: (session: SavedSession) => void;
-  onSelectKey: () => void;
   uiLang: UiLanguage;
-  hasKey: boolean;
 }
 
-export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onSelect, onResume, onSelectKey, uiLang, hasKey }) => {
+export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onSelect, onResume, uiLang }) => {
   const t = translations[uiLang];
   const [selectedLang, setSelectedLang] = useState<Language | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.JUNIOR);
@@ -80,31 +78,6 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onSelect, on
 
   return (
     <div className="max-w-7xl mx-auto py-20 px-6 lg:px-12">
-      {!hasKey && (
-        <div className="mb-12 bg-amber-50 border-2 border-amber-200 rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 premium-shadow animate-in slide-in-from-top-4">
-          <div className="text-start">
-             <div className="flex items-center gap-3 mb-2">
-                <span className="text-2xl">⚡</span>
-                <h2 className="text-2xl font-black text-amber-900 tracking-tight">
-                  {uiLang === UiLanguage.AR ? 'تفعيل ميزات الذكاء الاصطناعي الفائقة' : 'Unlock High-Performance AI'}
-                </h2>
-             </div>
-             <p className="text-amber-700 font-medium leading-relaxed max-w-2xl">
-                {uiLang === UiLanguage.AR 
-                  ? 'يتطلب استخدام نماذج Gemini 3 Pro تفعيل مفتاح API الخاص بك. اضغط على الزر لتفعيل الجلسة واستخدام كامل قدرات النظام.'
-                  : 'Using Gemini 3 Pro models requires a valid API key. Click the button to activate your session and access full system capabilities.'}
-                <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" className="underline ml-2 font-bold">Billing Docs</a>
-             </p>
-          </div>
-          <button 
-            onClick={onSelectKey}
-            className="whitespace-nowrap px-10 py-5 bg-amber-600 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-amber-700 transition-all shadow-xl shadow-amber-200 active:scale-95"
-          >
-            {uiLang === UiLanguage.AR ? 'تفعيل المفتاح الآن' : 'Select API Key'}
-          </button>
-        </div>
-      )}
-
       <div className="text-center mb-20 max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-8 tracking-tight leading-tight">
           {uiLang === UiLanguage.AR ? 'ارتقِ بمهاراتك' : 'Elevate Your'} <br/>
@@ -178,9 +151,9 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onSelect, on
               <div className="w-full lg:w-80 flex flex-col gap-4">
                 <button
                   onClick={handleAnalyzeJd}
-                  disabled={!jobDescription.trim() || analyzingJd || !hasKey}
+                  disabled={!jobDescription.trim() || analyzingJd}
                   className={`w-full py-6 rounded-2xl font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-xl ${
-                    analyzingJd || !hasKey
+                    analyzingJd
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
                     : 'bg-[#0a0a0b] text-white hover:bg-black active:scale-95 shadow-indigo-500/10'
                   }`}
@@ -197,11 +170,6 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onSelect, on
                     </>
                   )}
                 </button>
-                {!hasKey && (
-                  <button onClick={onSelectKey} className="text-[10px] text-amber-600 font-bold uppercase tracking-widest text-center animate-pulse">
-                    ⚠️ {uiLang === UiLanguage.AR ? 'فعل المفتاح أولاً' : 'Activate Key to use AI'}
-                  </button>
-                )}
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center px-4 leading-relaxed">
                   {uiLang === UiLanguage.AR ? 'سيقوم الذكاء الاصطناعي باستخراج اللغات والأدوات المطلوبة من النص تلقائياً' : 'AI will automatically detect required languages & tools from your text'}
                 </p>
@@ -299,18 +267,13 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onSelect, on
             <div className="flex justify-end pt-4">
               <button
                 onClick={() => onSelect(selectedLang, difficulty, jobDescription)}
-                disabled={!hasKey}
-                className={`group relative w-full lg:w-auto px-16 py-6 font-black uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95 shadow-2xl overflow-hidden ${
-                  !hasKey 
-                  ? 'bg-gray-100 text-gray-400 grayscale cursor-not-allowed'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200'
-                }`}
+                className="group relative w-full lg:w-auto px-16 py-6 bg-indigo-600 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-indigo-700 transition-all active:scale-95 shadow-2xl shadow-indigo-200 overflow-hidden"
               >
                 <div className="relative z-10 flex items-center justify-center gap-3">
-                  <span>{hasKey ? t.startInterview : (uiLang === UiLanguage.AR ? 'فعل المفتاح أولاً' : 'Activate Key First')}</span>
+                  <span>{t.startInterview}</span>
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </div>
-                {hasKey && <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>}
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </button>
             </div>
           </div>

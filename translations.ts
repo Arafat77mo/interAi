@@ -50,7 +50,8 @@ export const translations = {
     live: "Live",
     micLanguage: "Mic Language",
     langEn: "English",
-    langAr: "Arabic"
+    langAr: "Arabic",
+    portfolio: "Portfolio"
   },
   ar: {
     title: "خبير المقابلات الذكي",
@@ -102,6 +103,7 @@ export const translations = {
     live: "مباشر",
     micLanguage: "لغة الميكروفون",
     langEn: "الإنجليزية",
-    langAr: "العربية"
+    langAr: "العربية",
+    portfolio: "معرض الأعمال"
   }
 };

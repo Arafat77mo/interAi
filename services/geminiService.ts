@@ -2,16 +2,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Difficulty, Question, UiLanguage, Language } from "../types";
 
-export class GeminiService {
-  private async handleInvalidKeyError(error: any) {
-    if (error?.message?.includes('API key not valid') || error?.message?.includes('Requested entity was not found')) {
-      if (typeof window !== 'undefined' && (window as any).aistudio) {
-        // Force re-selection as per guidelines
-        await (window as any).aistudio.openSelectKey();
-      }
-    }
-  }
+export interface DetailedEvaluation {
+  feedback: string;
+  positives: string[];
+  improvements: string[];
+  score: number;
+}
 
+export class GeminiService {
   async extractSkillsFromJd(jdText: string, uiLang: UiLanguage): Promise<Language[]> {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const langInstructions = uiLang === UiLanguage.AR ? "Return descriptions in Arabic." : "Return descriptions in English.";
@@ -65,7 +63,6 @@ export class GeminiService {
       });
       return JSON.parse(response.text);
     } catch (e: any) {
-      await this.handleInvalidKeyError(e);
       console.error("Failed to extract skills", e);
       return [];
     }
@@ -103,15 +100,16 @@ export class GeminiService {
       });
       return JSON.parse(response.text);
     } catch (e: any) {
-      await this.handleInvalidKeyError(e);
       console.error("Failed to parse questions", e);
       return [];
     }
   }
 
-  async evaluateAnswer(question: string, answer: string, language: string, difficulty: Difficulty, uiLang: UiLanguage, jobDescription?: string): Promise<{ feedback: string, score: number }> {
+  async evaluateAnswer(question: string, answer: string, language: string, difficulty: Difficulty, uiLang: UiLanguage, jobDescription?: string): Promise<DetailedEvaluation> {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const langInstructions = uiLang === UiLanguage.AR ? "Provide feedback in Arabic." : "Provide feedback in English.";
+    const langInstructions = uiLang === UiLanguage.AR 
+      ? "Provide feedback, positives, and improvements in Arabic." 
+      : "Provide feedback, positives, and improvements in English.";
     
     let context = `${difficulty} ${language} interview.`;
     if (jobDescription) {
@@ -121,28 +119,40 @@ export class GeminiService {
     try {
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
-        contents: `Evaluate the following interview answer. 
+        contents: `Evaluate the following interview answer with high technical granularity.
         Question: "${question}"
         User Answer: "${answer}"
         Context: ${context}
         ${langInstructions}
-        Provide constructive feedback and a score from 0 to 100.`,
+        
+        Requirements:
+        1. "feedback": A concise executive summary of the performance.
+        2. "positives": A list of specific technical strengths or correct points mentioned.
+        3. "improvements": A list of specific missing technical details, inaccuracies, or better ways to phrase/architect the solution.
+        4. "score": A score from 0 to 100 based on technical depth and accuracy.`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
             type: Type.OBJECT,
             properties: {
               feedback: { type: Type.STRING },
+              positives: { type: Type.ARRAY, items: { type: Type.STRING } },
+              improvements: { type: Type.ARRAY, items: { type: Type.STRING } },
               score: { type: Type.NUMBER }
             },
-            required: ["feedback", "score"]
+            required: ["feedback", "positives", "improvements", "score"]
           }
         }
       });
       return JSON.parse(response.text);
     } catch (e: any) {
-      await this.handleInvalidKeyError(e);
-      return { feedback: "Could not evaluate at this time. Please check your API key.", score: 0 };
+      console.error("Evaluation failed", e);
+      return { 
+        feedback: "Could not evaluate at this time.", 
+        positives: [], 
+        improvements: ["Check your internet connection or API key."], 
+        score: 0 
+      };
     }
   }
 }

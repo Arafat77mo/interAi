@@ -35,23 +35,14 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<InterviewResult[]>([]);
   const [viewingResult, setViewingResult] = useState<InterviewResult | null>(null);
   const [visitorCount, setVisitorCount] = useState<number>(0);
-  const [hasKey, setHasKey] = useState<boolean>(true);
   const [resumedState, setResumedState] = useState<{
     responses: InterviewResponse[];
     currentIndex: number;
     questions: Question[];
   } | undefined>(undefined);
 
-  // Visitor Tracking & Key Check
+  // Visitor Tracking
   useEffect(() => {
-    const checkKey = async () => {
-      if (typeof window !== 'undefined' && (window as any).aistudio) {
-        const selected = await (window as any).aistudio.hasSelectedApiKey();
-        setHasKey(selected);
-      }
-    };
-    checkKey();
-
     const savedHistory = localStorage.getItem('interview_history');
     if (savedHistory) {
       try {
@@ -73,13 +64,6 @@ const App: React.FC = () => {
     }
     setVisitorCount(baseVisitors + currentVisits);
   }, []);
-
-  const handleSelectKey = async () => {
-    if ((window as any).aistudio) {
-      await (window as any).aistudio.openSelectKey();
-      setHasKey(true); // Assume success per race condition guidelines
-    }
-  };
 
   const handleStart = (lang: Language, diff: Difficulty, jd?: string) => {
     setSelectedLang(lang);
@@ -145,7 +129,7 @@ const App: React.FC = () => {
   const renderView = () => {
     switch (view) {
       case ViewState.SETUP:
-        return <LanguageSelector onSelect={handleStart} onResume={handleResume} uiLang={uiLang} onSelectKey={handleSelectKey} hasKey={hasKey} />;
+        return <LanguageSelector onSelect={handleStart} onResume={handleResume} uiLang={uiLang} />;
       case ViewState.INTERVIEW:
         if (!selectedLang) return null;
         return (
@@ -198,12 +182,10 @@ const App: React.FC = () => {
       uiLang={uiLang} 
       user={null}
       visitorCount={visitorCount}
-      hasKey={hasKey}
       onToggleLang={toggleUiLang} 
       onHistoryClick={handleViewHistory} 
       onHomeClick={handleRestart}
       onLogout={() => {}}
-      onSelectKey={handleSelectKey}
     >
       {renderView()}
     </Layout>

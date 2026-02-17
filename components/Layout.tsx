@@ -8,12 +8,10 @@ interface LayoutProps {
   uiLang: UiLanguage;
   user: User | null;
   visitorCount?: number;
-  hasKey?: boolean;
   onToggleLang: () => void;
   onHistoryClick: () => void;
   onHomeClick: () => void;
   onLogout: () => void;
-  onSelectKey: () => void;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ 
@@ -22,9 +20,7 @@ export const Layout: React.FC<LayoutProps> = ({
   onToggleLang, 
   onHistoryClick, 
   onHomeClick,
-  onSelectKey,
-  visitorCount = 0,
-  hasKey = true
+  visitorCount = 0
 }) => {
   const t = translations[uiLang];
   const isRtl = uiLang === UiLanguage.AR;
@@ -57,16 +53,6 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
             
             <div className="flex items-center gap-4 md:gap-8">
-              {!hasKey && (
-                <button 
-                  onClick={onSelectKey}
-                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-amber-600 transition-all shadow-lg shadow-amber-200"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  {uiLang === UiLanguage.AR ? 'تفعيل البريميوم' : 'Unlock Premium'}
-                </button>
-              )}
-              
               <nav className="hidden lg:flex items-center gap-8">
                 <button 
                   onClick={onHistoryClick}
@@ -104,24 +90,47 @@ export const Layout: React.FC<LayoutProps> = ({
             
             <div className="flex flex-col items-center gap-4 mb-12">
               <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">Curated By</span>
-              <a 
-                href="https://www.linkedin.com/in/mohammed-ahmed-arafat/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group flex items-center gap-4 px-6 py-3 bg-white border border-gray-100 rounded-2xl hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/5 transition-all"
-              >
-                <div className="w-10 h-10 bg-[#0077b5] rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100 group-hover:scale-110 transition-transform">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                  </svg>
-                </div>
-                <div className="text-start">
-                  <span className="block text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                    Mohammed Ahmed Arafat
-                  </span>
-                  <span className="block text-[10px] text-gray-400 font-medium">Senior Software Engineer</span>
-                </div>
-              </a>
+              
+              <div className="flex flex-col gap-3 w-full">
+                <a 
+                  href="https://www.linkedin.com/in/mohammed-ahmed-arafat/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-4 px-6 py-3 bg-white border border-gray-100 rounded-2xl hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/5 transition-all"
+                >
+                  <div className="w-10 h-10 bg-[#0077b5] rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                  </div>
+                  <div className="text-start">
+                    <span className="block text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                      Mohammed Ahmed Arafat
+                    </span>
+                    <span className="block text-[10px] text-gray-400 font-medium">Senior Software Engineer</span>
+                  </div>
+                </a>
+
+                {/* Portfolio Link Added Here */}
+                <a 
+                  href="https://ai.mohammed-poop444.workers.dev/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-4 px-6 py-3 bg-white border border-gray-100 rounded-2xl hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/5 transition-all"
+                >
+                  <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white shadow-lg shadow-gray-200 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                  </div>
+                  <div className="text-start">
+                    <span className="block text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors uppercase tracking-widest">
+                      {t.portfolio}
+                    </span>
+                    <span className="block text-[10px] text-gray-400 font-medium lowercase">ai.mohammed-poop444</span>
+                  </div>
+                </a>
+              </div>
             </div>
 
             <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">

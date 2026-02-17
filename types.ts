@@ -41,6 +41,8 @@ export interface InterviewResponse {
   questionText: string;
   userAnswer: string;
   feedback: string;
+  positives: string[];
+  improvements: string[];
   score: number; // 0-100
 }
 
