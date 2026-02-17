@@ -42,31 +42,34 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-12 px-4">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-2">{t.summary}</h1>
-        <p className="text-gray-500">{language.name[uiLang]} • {difficulty} Session</p>
+    <div className="max-w-5xl mx-auto py-12 md:py-16 px-4 sm:px-6">
+      <div className="text-center mb-12 md:mb-16">
+        <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight leading-tight">{t.summary}</h1>
+        <p className="text-slate-500 font-bold uppercase tracking-widest text-xs md:text-sm">
+           {language.name[uiLang]} • {difficulty} Session
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <div className="bg-white p-8 rounded-3xl shadow-md border border-gray-100 flex flex-col items-center justify-center">
-          <span className="text-gray-500 font-medium mb-1">{t.overallScore}</span>
-          <div className={`text-6xl font-black ${getScoreColor(averageScore)}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-10 mb-16 md:mb-24">
+        <div className="bg-white p-10 rounded-[2.5rem] premium-shadow border border-slate-100 flex flex-col items-center justify-center text-center">
+          <span className="text-slate-400 font-black text-[10px] uppercase tracking-[0.3em] mb-4">{t.overallScore}</span>
+          <div className={`text-6xl md:text-7xl font-black leading-none mb-2 ${getScoreColor(averageScore)}`}>
             {averageScore}%
           </div>
+          <p className="text-slate-500 font-bold text-xs">Technical Proficiency</p>
         </div>
 
-        <div className="md:col-span-2 bg-white p-6 rounded-3xl shadow-md border border-gray-100 h-64">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="lg:col-span-2 bg-white p-6 md:p-10 rounded-[2.5rem] premium-shadow border border-slate-100 h-64 md:h-auto">
+          <ResponsiveContainer width="100%" height="100%" minHeight={250}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} reversed={uiLang === UiLanguage.AR} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} reversed={uiLang === UiLanguage.AR} tick={{fontSize: 10, fontWeight: 700}} />
               <YAxis domain={[0, 100]} hide />
               <Tooltip 
-                cursor={{ fill: '#f9fafb' }}
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                cursor={{ fill: '#f8fafc', radius: 8 }}
+                contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', padding: '12px' }}
               />
-              <Bar dataKey="score" radius={[8, 8, 0, 0]}>
+              <Bar dataKey="score" radius={[8, 8, 8, 8]} barSize={32}>
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.score >= 80 ? '#10b981' : entry.score >= 60 ? '#f59e0b' : '#ef4444'} />
                 ))}
@@ -76,37 +79,40 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
         </div>
       </div>
 
-      <div className="space-y-6 mb-12 text-start">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.detailedFeedback}</h2>
+      <div className="space-y-8 md:space-y-12 mb-16 md:mb-24 text-start">
+        <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-8 px-2 tracking-tight">{t.detailedFeedback}</h2>
         {responses.map((response, idx) => (
-          <div key={idx} className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
-            <div className="p-6 border-b border-gray-50 flex justify-between items-start gap-4">
+          <div key={idx} className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-xl animate-in fade-in duration-700 delay-[100ms]" style={{ animationDelay: `${idx * 150}ms` }}>
+            <div className="p-8 md:p-10 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start gap-6">
               <div className="flex-1">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter mb-1 block">Question {idx + 1}</span>
-                <h3 className="text-lg font-bold text-gray-900 leading-snug">{response.questionText}</h3>
+                <div className="flex items-center gap-3 mb-3">
+                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Question {idx + 1}</span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-black text-slate-900 leading-snug tracking-tight">{response.questionText}</h3>
               </div>
-              <div className={`px-4 py-1.5 rounded-full text-sm font-bold ${getScoreBg(response.score)} ${getScoreColor(response.score)}`}>
+              <div className={`shrink-0 px-6 py-3 rounded-2xl text-sm font-black shadow-lg ${getScoreBg(response.score)} ${getScoreColor(response.score)}`}>
                 {response.score}/100
               </div>
             </div>
-            <div className="p-6 bg-gray-50/50">
-              <div className="mb-6">
-                <span className="text-xs font-bold text-gray-500 uppercase block mb-1">{t.yourAnswer}</span>
-                <p className="text-gray-700 italic">"{response.userAnswer || 'No answer provided.'}"</p>
+            <div className="p-8 md:p-10 bg-slate-50/40">
+              <div className="mb-10">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-3">Professional Response</span>
+                <p className="text-slate-700 italic text-lg leading-relaxed font-medium">"{response.userAnswer || 'No answer provided.'}"</p>
               </div>
               
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 mb-4">
-                <span className="text-xs font-bold text-indigo-600 uppercase block mb-2">{t.aiCritique}</span>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"{response.feedback}"</p>
+              <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-200/50 shadow-inner">
+                <span className="text-[9px] font-black text-indigo-600 uppercase tracking-widest block mb-4">Expert Critique</span>
+                <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-10 font-medium italic">"{response.feedback}"</p>
                 
-                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                   {response.positives && response.positives.length > 0 && (
-                    <div className="bg-emerald-50/30 p-4 rounded-xl border border-emerald-50">
-                      <h4 className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-2">Strengths</h4>
-                      <ul className="space-y-1.5">
+                    <div className="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100">
+                      <h4 className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-4">Strengths Identified</h4>
+                      <ul className="space-y-3">
                         {response.positives.map((p, i) => (
-                          <li key={i} className="flex gap-2 text-xs text-emerald-800 font-medium leading-relaxed">
-                            <span className="shrink-0 text-[10px]">✅</span>
+                          <li key={i} className="flex gap-3 text-xs md:text-sm text-emerald-900 font-bold leading-relaxed">
+                            <span className="shrink-0 text-emerald-500">✅</span>
                             <span>{p}</span>
                           </li>
                         ))}
@@ -114,12 +120,12 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                     </div>
                   )}
                   {response.improvements && response.improvements.length > 0 && (
-                    <div className="bg-rose-50/30 p-4 rounded-xl border border-rose-50">
-                      <h4 className="text-[9px] font-black text-rose-600 uppercase tracking-widest mb-2">Areas for Improvement</h4>
-                      <ul className="space-y-1.5">
+                    <div className="bg-rose-50/50 p-6 rounded-2xl border border-rose-100">
+                      <h4 className="text-[9px] font-black text-rose-600 uppercase tracking-widest mb-4">Growth Areas</h4>
+                      <ul className="space-y-3">
                         {response.improvements.map((im, i) => (
-                          <li key={i} className="flex gap-2 text-xs text-rose-800 font-medium leading-relaxed">
-                            <span className="shrink-0 text-[10px]">💡</span>
+                          <li key={i} className="flex gap-3 text-xs md:text-sm text-rose-900 font-bold leading-relaxed">
+                            <span className="shrink-0 text-rose-400">💡</span>
                             <span>{im}</span>
                           </li>
                         ))}
@@ -133,10 +139,10 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
         ))}
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center pb-12">
         <button
           onClick={onRestart}
-          className="px-10 py-4 bg-indigo-600 text-white font-bold rounded-2xl hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all hover:-translate-y-1"
+          className="btn-premium px-12 md:px-16 py-5 md:py-6 text-white font-black text-base md:text-lg uppercase tracking-[0.2em] rounded-2xl shadow-2xl"
         >
           {t.startNew}
         </button>

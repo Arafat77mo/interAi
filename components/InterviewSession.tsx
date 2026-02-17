@@ -303,17 +303,17 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-40 text-center px-6">
-        <div className="relative w-24 h-24 mb-10">
-          <div className="absolute inset-0 border-4 border-indigo-100 rounded-full"></div>
-          <div className="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+      <div className="flex flex-col items-center justify-center py-48 md:py-64 text-center px-6">
+        <div className="relative w-32 h-32 md:w-48 md:h-48 mb-14 md:mb-20">
+          <div className="absolute inset-0 border-[8px] md:border-[10px] border-indigo-100/50 rounded-[3rem] md:rounded-[4rem] rotate-45"></div>
+          <div className="absolute inset-0 border-[8px] md:border-[10px] border-indigo-600 rounded-[3rem] md:rounded-[4rem] border-t-transparent animate-spin rotate-45"></div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-black text-indigo-600">AI</span>
+            <span className="text-4xl md:text-6xl font-black text-indigo-600">AI</span>
           </div>
         </div>
-        <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-4">{t.preparing}</h2>
-        <p className="text-gray-400 font-medium max-w-sm mx-auto leading-relaxed">
-           Curating your premium technical session.
+        <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter mb-8 leading-none">{t.preparing}</h2>
+        <p className="text-slate-400 font-bold uppercase tracking-[0.5em] text-xs md:text-base">
+           Personalizing Technical Context
         </p>
       </div>
     );
@@ -323,197 +323,220 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="max-w-5xl mx-auto py-20 px-6 lg:px-12 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <div className="max-w-7xl mx-auto py-12 md:py-24 px-4 sm:px-6 lg:px-12 animate-in fade-in slide-in-from-bottom-12 duration-1000">
       
+      {/* Loading Evaluation Overlay */}
       {evaluating && (
-        <div className="fixed inset-0 z-[200] bg-white/90 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
-          <div className="w-16 h-1 bg-indigo-600 animate-pulse mb-10"></div>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-4">
+        <div className="fixed inset-0 z-[200] bg-slate-900/98 backdrop-blur-[50px] flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-600">
+          <div className="w-24 h-24 md:w-32 md:h-32 bg-indigo-500 rounded-[3rem] animate-bounce mb-14 shadow-[0_50px_100px_-20px_rgba(99,102,241,0.7)] flex items-center justify-center">
+             <div className="w-10 h-10 md:w-14 md:h-14 border-[6px] md:border-[8px] border-white/20 border-t-white rounded-full animate-spin"></div>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8">
              {t.analyzing}
           </h2>
-          <p className="text-gray-400 font-bold uppercase tracking-widest">{t.reviewingFeedback}</p>
+          <p className="text-indigo-400 font-bold uppercase tracking-[0.6em] text-sm md:text-lg">{t.reviewingFeedback}</p>
         </div>
       )}
 
-      {showSavedToast && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[210] glass px-8 py-4 rounded-full premium-shadow flex items-center gap-3 animate-in slide-in-from-top-4 duration-500">
-          <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"/></svg>
+      {/* Progress Header - Spaced and Polished */}
+      <div className="mb-20 md:mb-32 flex flex-col md:flex-row md:items-center justify-between gap-14">
+        <div className="text-start flex-1 max-w-3xl">
+          <div className="flex items-center gap-6 md:gap-10 mb-8 md:mb-10">
+             <div className="w-20 h-20 md:w-28 md:h-28 bg-indigo-600 rounded-[2rem] md:rounded-[3.5rem] flex items-center justify-center text-5xl md:text-7xl shadow-3xl shadow-indigo-100 animate-float shrink-0">
+               {language.icon}
+             </div>
+             <div>
+               <h4 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none">{language.name[uiLang]}</h4>
+               <p className="text-[12px] md:text-[14px] font-black text-slate-400 uppercase tracking-[0.5em] mt-4">Professional Level: {difficulty}</p>
+             </div>
           </div>
-          <span className="text-sm font-black text-gray-900 uppercase tracking-widest">{t.progressSaved}</span>
-        </div>
-      )}
-
-      <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div className="text-start">
-          <div className="flex items-center gap-4 mb-3">
-             <span className="px-4 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-indigo-100/50">
-               {language.name[uiLang]} • {difficulty}
-             </span>
-             <div className="w-px h-3 bg-gray-200"></div>
-             <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
-               {t.questionOf.replace('{current}', (currentIndex + 1).toString()).replace('{total}', questions.length.toString())}
-             </span>
-          </div>
-          <div className="relative h-2 w-64 bg-gray-100 rounded-full overflow-hidden">
-             <div className="h-full bg-indigo-600 transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
+          <div className="flex items-center gap-8 md:gap-12">
+            <div className="relative h-5 md:h-7 flex-1 md:flex-none md:w-[500px] bg-slate-200/40 rounded-full overflow-hidden border border-slate-100/50">
+               <div className="h-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 transition-all duration-1000 ease-out shadow-[0_8px_20px_-5px_rgba(99,102,241,0.6)]" style={{ width: `${progress}%` }}></div>
+            </div>
+            <span className="text-[13px] md:text-[16px] font-black text-indigo-600 uppercase tracking-[0.4em] shrink-0 font-mono">
+               {currentIndex + 1} <span className="text-slate-300 mx-1">/</span> {questions.length}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button onClick={handleSaveProgress} className="w-12 h-12 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+        <div className="flex items-center justify-center gap-6">
+          <button onClick={handleSaveProgress} className="w-16 h-16 md:w-20 md:h-20 rounded-[1.8rem] md:rounded-[2.5rem] bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-md active:scale-95">
+            <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
           </button>
-          <button onClick={() => setVoiceEnabled(!voiceEnabled)} className={`w-12 h-12 rounded-2xl border transition-all shadow-sm flex items-center justify-center ${voiceEnabled ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-white border-gray-100 text-gray-300'}`}>
+          <button onClick={() => setVoiceEnabled(!voiceEnabled)} className={`w-16 h-16 md:w-20 md:h-20 rounded-[1.8rem] md:rounded-[2.5rem] border transition-all flex items-center justify-center active:scale-95 shadow-md ${voiceEnabled ? 'bg-indigo-50 border-indigo-200 text-indigo-600 shadow-xl shadow-indigo-500/10' : 'bg-white border-slate-200 text-slate-300'}`}>
             {voiceEnabled ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+              <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+              <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
             )}
           </button>
-          <button onClick={onCancel} className="px-6 py-3 rounded-2xl bg-white border border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 hover:border-red-100 transition-all shadow-sm">
+          <button onClick={onCancel} className="px-8 md:px-14 py-5 md:py-7 rounded-[1.8rem] md:rounded-[2.5rem] bg-white border border-slate-200 text-[11px] md:text-[13px] font-black uppercase tracking-[0.4em] text-slate-400 hover:text-red-500 hover:border-red-200 transition-all shadow-md active:scale-95">
             {t.quit}
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-[3rem] p-10 md:p-20 premium-shadow border border-gray-100/50 mb-12 relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-10 opacity-[0.03] select-none">
-           <span className="text-[12rem] font-black italic">Q{currentIndex + 1}</span>
+      {/* Main Question Card - Immersive and High Contrast */}
+      <div className="bg-white rounded-[3rem] md:rounded-[6rem] p-12 md:p-40 premium-shadow border border-slate-100 mb-24 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-16 md:p-32 opacity-[0.04] select-none scale-150 rotate-12 pointer-events-none">
+           <span className="text-[12rem] md:text-[20rem] font-black italic tracking-tighter">PHASE</span>
         </div>
         
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
-          <div className="flex justify-center mb-8">
-            <span className="px-5 py-2 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full">
+        <div className="relative z-10 text-center max-w-6xl mx-auto">
+          <div className="flex justify-center mb-10 md:mb-16">
+            <span className="px-8 md:px-10 py-4 bg-slate-900 text-white text-[11px] md:text-[14px] font-black uppercase tracking-[0.6em] rounded-full shadow-[0_25px_50px_-10px_rgba(15,23,42,0.4)]">
               {currentQuestion.category}
             </span>
           </div>
           
-          <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight mb-16 tracking-tight">
+          <h1 className="text-4xl md:text-7xl lg:text-[5.5rem] font-black text-slate-900 leading-[1.15] md:leading-[1.1] mb-20 md:mb-40 tracking-tighter text-fluid-hero">
             {currentQuestion.text}
           </h1>
 
-          <div className="relative group">
+          <div className="relative">
+            {/* Live Speech Console - More Prominent */}
+            {(isListening || interimTranscript) && (
+              <div className="absolute -top-20 md:-top-28 left-1/2 -translate-x-1/2 w-full px-6 z-40 flex justify-center">
+                <div className="bg-white border-2 border-indigo-100 rounded-[2rem] md:rounded-full px-10 md:px-16 py-6 md:py-9 shadow-[0_40px_80px_-20px_rgba(99,102,241,0.4)] flex items-center gap-6 md:gap-10 animate-in slide-in-from-bottom-8 duration-500 w-full max-w-4xl border-b-8 border-b-indigo-500">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="w-3 h-3 md:w-5 md:h-5 bg-indigo-500 rounded-full animate-ping"></span>
+                    <span className="text-[12px] md:text-[15px] font-black text-indigo-600 uppercase tracking-[0.5em]">{uiLang === UiLanguage.AR ? 'جاري التحليل' : 'CAPTURING LIVE'}</span>
+                  </div>
+                  <div className="w-px h-8 bg-slate-200 shrink-0"></div>
+                  <div className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-lg md:text-3xl font-bold text-slate-900 lowercase italic text-start leading-none pb-2">
+                    {interimTranscript || (uiLang === UiLanguage.AR ? 'أخبرنا عن خبراتك...' : 'Tell us about your expertise...')}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <textarea
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               disabled={evaluating || showFeedback}
               placeholder={t.placeholder}
-              className={`w-full h-80 p-10 rounded-[2.5rem] border transition-all text-xl font-medium leading-relaxed resize-none outline-none shadow-inner ${
+              className={`w-full h-80 md:h-[550px] p-12 sm:p-20 md:p-24 rounded-[3rem] md:rounded-[5.5rem] border-0 transition-all text-2xl sm:text-3xl md:text-4xl font-medium leading-relaxed resize-none outline-none shadow-inner ${
                 isListening 
-                ? 'bg-red-50/20 border-red-100 ring-4 ring-red-500/5' 
+                ? 'bg-red-50/20 ring-4 md:ring-[25px] ring-red-500/10' 
                 : showFeedback
-                ? 'bg-gray-50 border-gray-200 opacity-80'
-                : 'bg-gray-50/50 border-gray-100 focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/5'
+                ? 'bg-slate-50 opacity-80'
+                : 'bg-slate-50/50 focus:bg-white focus:ring-[20px] focus:ring-indigo-500/5'
               }`}
             />
             
             {!showFeedback && (
-              <div className={`absolute bottom-8 ${uiLang === UiLanguage.AR ? 'left-8' : 'right-8'} flex items-center gap-4`}>
+              <div className={`absolute bottom-10 md:bottom-24 ${uiLang === UiLanguage.AR ? 'left-12 md:left-24' : 'right-12 md:right-24'} flex items-center gap-8 md:gap-12`}>
                 <button
                   onClick={toggleListening}
-                  className={`w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-2xl relative z-20 ${
-                    isListening ? 'bg-red-500 text-white animate-pulse scale-110' : 'bg-white text-gray-400 hover:text-indigo-600 hover:scale-110'
+                  className={`w-24 h-24 md:w-44 md:h-44 rounded-full flex items-center justify-center transition-all shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] relative z-20 shrink-0 ${
+                    isListening ? 'bg-red-500 text-white animate-pulse scale-110 shadow-red-500/60' : 'bg-white text-slate-400 hover:text-indigo-600 hover:scale-110 shadow-slate-200'
                   }`}
                 >
                   {isListening ? (
-                    <div className="flex gap-1 items-center">
-                      <div className="w-1.5 h-4 bg-white rounded-full animate-bounce"></div>
-                      <div className="w-1.5 h-8 bg-white rounded-full animate-bounce delay-75"></div>
-                      <div className="w-1.5 h-6 bg-white rounded-full animate-bounce delay-150"></div>
-                      <div className="w-1.5 h-4 bg-white rounded-full animate-bounce delay-200"></div>
+                    <div className="flex gap-2 md:gap-3 items-center">
+                      <div className="w-2 md:w-4 h-8 md:h-14 bg-white rounded-full animate-bounce"></div>
+                      <div className="w-2 md:w-4 h-14 md:h-24 bg-white rounded-full animate-bounce delay-75"></div>
+                      <div className="w-2 md:w-4 h-10 md:h-18 bg-white rounded-full animate-bounce delay-150"></div>
+                      <div className="w-2 md:w-4 h-8 md:h-14 bg-white rounded-full animate-bounce delay-200"></div>
                     </div>
                   ) : (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-20a3 3 0 00-3 3v8a3 3 0 006 0V5a3 3 0 00-3-3z"/></svg>
+                    <svg className="w-12 h-12 md:w-20 md:h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-20a3 3 0 00-3 3v8a3 3 0 006 0V5a3 3 0 00-3-3z"/></svg>
                   )}
                 </button>
                 
                 {isListening && (
-                   <div className="flex flex-col items-start gap-1">
-                      <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">{t.live} AI STT</span>
-                      <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Arabic & English Auto-Detect</span>
+                   <div className="hidden lg:flex flex-col items-start gap-2">
+                      <span className="text-[12px] md:text-[15px] font-black text-red-500 uppercase tracking-[0.6em]">{t.live} AI CAPTURE</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Studio Quality Sampling</span>
                    </div>
                 )}
-              </div>
-            )}
-            
-            {interimTranscript && (
-              <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-6 py-3 bg-white border border-indigo-100 rounded-full shadow-xl text-indigo-600 text-xs font-black uppercase tracking-widest animate-in fade-in slide-in-from-bottom-2 flex items-center gap-3">
-                 <div className="flex gap-0.5">
-                    <div className="w-1 h-2 bg-indigo-600 animate-pulse"></div>
-                    <div className="w-1 h-3 bg-indigo-600 animate-pulse delay-75"></div>
-                    <div className="w-1 h-2 bg-indigo-600 animate-pulse delay-150"></div>
-                 </div>
-                 <span className="opacity-50 uppercase">{uiLang === UiLanguage.AR ? 'جاري الاستماع' : 'LISTENING'}:</span> 
-                 <span className="lowercase">{interimTranscript}</span>
               </div>
             )}
           </div>
         </div>
 
+        {/* Evaluation Card - Deep Polish */}
         {showFeedback && currentEvaluation && (
-          <div className="mt-12 p-10 bg-white rounded-[2.5rem] border-2 border-indigo-50 shadow-2xl shadow-indigo-500/5 animate-in slide-in-from-top-4 duration-500 text-start">
-            <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
-              <div className={`w-24 h-24 rounded-3xl flex flex-col items-center justify-center shrink-0 shadow-lg ${
-                currentEvaluation.score >= 80 ? 'bg-emerald-50 text-emerald-600' : currentEvaluation.score >= 50 ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'
-              }`}>
-                <span className="text-3xl font-black">{currentEvaluation.score}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">SCORE</span>
+          <div className="mt-20 md:mt-32 p-12 md:p-32 bg-slate-900 rounded-[3.5rem] md:rounded-[6rem] shadow-[0_80px_160px_-30px_rgba(15,23,42,0.6)] text-white animate-in slide-in-from-top-16 duration-800 text-start relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-500/20 to-transparent pointer-events-none"></div>
+            
+            <div className="flex flex-col md:flex-row gap-16 md:gap-28 items-start relative z-10">
+              <div className="relative shrink-0 mx-auto md:mx-0">
+                <svg className="w-40 h-40 md:w-64 md:h-64 transform -rotate-90">
+                  <circle cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-white/10 md:hidden" />
+                  <circle cx="128" cy="128" r="115" stroke="currentColor" strokeWidth="20" fill="transparent" className="hidden md:block text-white/10" />
+                  
+                  {/* Desktop Score Ring */}
+                  <circle cx="128" cy="128" r="115" stroke="currentColor" strokeWidth="20" fill="transparent" 
+                    className={`${currentEvaluation.score >= 80 ? 'text-emerald-400' : currentEvaluation.score >= 50 ? 'text-amber-400' : 'text-rose-400'} hidden md:block progress-ring`}
+                    strokeDasharray="722.5"
+                    strokeDashoffset={722.5 - (722.5 * currentEvaluation.score) / 100}
+                    strokeLinecap="round"
+                  />
+                  {/* Smaller Ring for Tablet */}
+                  <circle cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="12" fill="transparent" 
+                    className={`${currentEvaluation.score >= 80 ? 'text-emerald-400' : currentEvaluation.score >= 50 ? 'text-amber-400' : 'text-rose-400'} md:hidden progress-ring`}
+                    strokeDasharray="452.3"
+                    strokeDashoffset={452.3 - (452.3 * currentEvaluation.score) / 100}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-5xl md:text-8xl font-black">{currentEvaluation.score}</span>
+                  <span className="text-[10px] md:text-[14px] font-black opacity-40 uppercase tracking-[0.5em] mt-3">Proficiency</span>
+                </div>
               </div>
-              <div className="flex-grow">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-2 h-2 rounded-full ${currentEvaluation.score >= 80 ? 'bg-emerald-500' : currentEvaluation.score >= 50 ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
-                  <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest">
+
+              <div className="flex-grow w-full">
+                <div className="flex items-center gap-6 mb-12 md:mb-16">
+                  <h3 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-center md:text-start w-full md:w-auto leading-tight">
                     {currentEvaluation.score >= 80 
-                      ? (uiLang === UiLanguage.AR ? 'أداء ممتاز' : 'EXCELLENT PERFORMANCE')
+                      ? (uiLang === UiLanguage.AR ? 'أداء متميز' : 'MASTERFUL INSIGHT')
                       : currentEvaluation.score >= 50
-                      ? (uiLang === UiLanguage.AR ? 'أداء جيد' : 'GOOD PERFORMANCE')
-                      : (uiLang === UiLanguage.AR ? 'يحتاج تحسين' : 'NEEDS IMPROVEMENT')
+                      ? (uiLang === UiLanguage.AR ? 'أداء جيد جداً' : 'CORE COMPETENCY')
+                      : (uiLang === UiLanguage.AR ? 'مساحة للتطوير' : 'REFINEMENT NEEDED')
                     }
                   </h3>
                 </div>
-                <p className="text-gray-600 leading-relaxed font-medium whitespace-pre-wrap italic mb-4">
+                <p className="text-indigo-100/80 leading-relaxed font-bold text-2xl md:text-4xl mb-16 md:mb-24 italic text-center md:text-start px-4">
                   "{currentEvaluation.feedback}"
                 </p>
                 
-                <div className="grid md:grid-cols-2 gap-6 mt-6">
-                  {currentEvaluation.positives.length > 0 && (
-                    <div className="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100">
-                      <h4 className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">What went well</h4>
-                      <ul className="space-y-2">
-                        {currentEvaluation.positives.map((p, i) => (
-                          <li key={i} className="flex gap-2 text-sm font-medium text-emerald-800">
-                            <span className="shrink-0">✅</span>
-                            <span>{p}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {currentEvaluation.improvements.length > 0 && (
-                    <div className="bg-rose-50/50 p-6 rounded-2xl border border-rose-100">
-                      <h4 className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-3">Room for growth</h4>
-                      <ul className="space-y-2">
-                        {currentEvaluation.improvements.map((im, i) => (
-                          <li key={i} className="flex gap-2 text-sm font-medium text-rose-800">
-                            <span className="shrink-0">💡</span>
-                            <span>{im}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
+                  <div className="bg-white/5 p-12 rounded-[3.5rem] border border-white/5 backdrop-blur-xl">
+                    <h4 className="text-[12px] md:text-[15px] font-black text-emerald-400 uppercase tracking-[0.6em] mb-10">Dominant Highlights</h4>
+                    <ul className="space-y-6 md:space-y-10">
+                      {currentEvaluation.positives.map((p, i) => (
+                        <li key={i} className="flex gap-6 text-lg md:text-2xl font-bold text-slate-100 leading-tight">
+                          <span className="shrink-0 text-emerald-400 text-2xl md:text-3xl">✓</span>
+                          <span>{p}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-white/5 p-12 rounded-[3.5rem] border border-white/5 backdrop-blur-xl">
+                    <h4 className="text-[12px] md:text-[15px] font-black text-rose-400 uppercase tracking-[0.6em] mb-10">Critical Precision</h4>
+                    <ul className="space-y-6 md:space-y-10">
+                      {currentEvaluation.improvements.map((im, i) => (
+                        <li key={i} className="flex gap-6 text-lg md:text-2xl font-bold text-slate-100 leading-tight">
+                          <span className="shrink-0 text-rose-400 text-2xl md:text-3xl">!</span>
+                          <span>{im}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="mt-10 flex justify-end">
+            <div className="mt-20 md:mt-32 flex justify-center md:justify-end">
               <button
                 onClick={handleProceed}
-                className="group px-12 py-5 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-indigo-700 transition-all shadow-xl active:scale-95 flex items-center gap-3"
+                className="group w-full sm:w-auto px-16 md:px-28 py-8 md:py-10 bg-white text-slate-900 rounded-[2.5rem] md:rounded-[4rem] font-black uppercase tracking-[0.4em] hover:bg-slate-100 transition-all shadow-3xl active:scale-95 flex items-center justify-center gap-8"
               >
-                <span>{currentIndex === questions.length - 1 ? t.finish : t.next}</span>
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                <span className="text-xl md:text-3xl">{currentIndex === questions.length - 1 ? t.finish : t.next}</span>
+                <svg className={`w-8 h-8 md:w-12 md:h-12 transition-transform group-hover:translate-x-6 ${uiLang === UiLanguage.AR ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
               </button>
             </div>
           </div>
@@ -521,23 +544,30 @@ export const InterviewSession: React.FC<InterviewSessionProps> = ({
       </div>
 
       {!showFeedback && (
-        <div className="flex justify-between items-center px-6">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">Response Volume</span>
-            <span className="text-xl font-black text-gray-900">{userAnswer.split(/\s+/).filter(Boolean).length} WORDS</span>
+        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-16 px-6">
+          <div className="flex items-center justify-center md:justify-start gap-12 md:gap-20 w-full md:w-auto bg-white/60 backdrop-blur-md py-10 md:py-12 px-12 md:px-20 rounded-[3rem] md:rounded-[4rem] border border-slate-200">
+            <div className="flex flex-col items-center md:items-start text-center md:text-start">
+              <span className="text-[11px] md:text-[14px] font-black text-slate-300 uppercase tracking-[0.5em] mb-3">Linguistic Depth</span>
+              <span className="text-3xl md:text-5xl font-black text-slate-900 leading-none">{userAnswer.split(/\s+/).filter(Boolean).length} <span className="text-slate-300 text-base md:text-2xl font-bold uppercase ml-3">Tokens</span></span>
+            </div>
+            <div className="w-px h-16 bg-slate-200 shrink-0"></div>
+            <div className="flex flex-col items-center md:items-start text-center md:text-start">
+              <span className="text-[11px] md:text-[14px] font-black text-slate-300 uppercase tracking-[0.5em] mb-3">AI Verdict</span>
+              <span className="text-base md:text-2xl font-black text-indigo-600 uppercase tracking-[0.3em] leading-none">Awaiting</span>
+            </div>
           </div>
           
           <button
             onClick={handleSubmitAnswer}
             disabled={!userAnswer.trim() || evaluating}
-            className={`group px-16 py-6 rounded-2xl font-black text-lg uppercase tracking-[0.2em] transition-all active:scale-[0.98] flex items-center gap-4 ${
+            className={`btn-premium group w-full md:w-auto px-20 md:px-32 py-8 md:py-12 rounded-[2.5rem] md:rounded-[4.5rem] font-black text-xl md:text-3xl uppercase tracking-[0.3em] text-white flex items-center justify-center gap-8 md:gap-12 ${
               !userAnswer.trim() || evaluating
-                ? 'bg-gray-100 text-gray-400 grayscale'
-                : 'bg-[#0a0a0b] text-white hover:bg-black shadow-2xl'
+                ? 'opacity-40 grayscale pointer-events-none'
+                : ''
             }`}
           >
-            <span>{uiLang === UiLanguage.AR ? 'تحقق من الإجابة' : 'CHECK ANSWER'}</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span className="text-xl md:text-2xl font-black">{uiLang === UiLanguage.AR ? 'تحليل الإجابة' : 'SUBMIT VERDICT'}</span>
+            <svg className="w-10 h-10 md:w-14 md:h-14 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </button>
         </div>
       )}

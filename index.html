@@ -4,32 +4,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InterviewPro AI | Premium Experience</title>
+    <title>InterviewPro AI | Premium Technical Excellence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #a855f7;
+            --surface: #ffffff;
+            --background: #f8fafc;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #fcfcfd;
-            color: #1a1a1a;
+            background-color: var(--background);
+            color: #1e293b;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
+
+        /* Enhanced RTL Spacing for Arabic Readability */
+        [dir="rtl"] body {
+            line-height: 1.8;
+            letter-spacing: 0;
+        }
+
         .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
+
         .premium-shadow {
-            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 30px 80px -20px rgba(99, 102, 241, 0.15);
         }
+
         .text-gradient {
-            background: linear-gradient(135deg, #1a1a1a 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #6366f1 50%, #a855f7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        /* Smooth scroll for the whole app */
+
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 80%);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-premium:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 25px 50px -10px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-premium:active:not(:disabled) {
+            transform: translateY(2px) scale(0.98);
+        }
+
+        .card-hover {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 50px 100px -25px rgba(99, 102, 241, 0.2);
+        }
+
+        .progress-ring {
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
         html {
             scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 12px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(2deg); }
+        }
+
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Fluid Typography - Immersive scale */
+        .text-fluid-hero {
+            font-size: clamp(2.8rem, 14vw, 9rem);
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+        }
+
+        /* Responsive spacing utilities */
+        .section-padding {
+            padding-top: clamp(4rem, 10vh, 10rem);
+            padding-bottom: clamp(4rem, 10vh, 10rem);
         }
     </style>
 <script type="importmap">
@@ -45,6 +145,7 @@
 </script>
 </head>
 <body>
+    <div class="bg-mesh"></div>
     <div id="root"></div>
 </body>
 </html>
