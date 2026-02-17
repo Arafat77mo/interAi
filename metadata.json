@@ -1,0 +1,7 @@
+{
+  "name": "Copy of InterviewPro AI",
+  "description": "An AI-powered mock interview platform for developers to practice Laravel, PHP, and other languages across different seniority levels.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
